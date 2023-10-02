@@ -5,9 +5,11 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.MagnetrometroFragment">
+    android:background="@drawable/fondoazulverdedegradado"
+    tools:context=".magnetometro.MagnetometroFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -15,14 +17,24 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:text="@string/tiposensor"
-        android:textSize="40dp"
         android:textColor="@color/white"
+        android:textSize="40dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.412"
+        app:layout_constraintHorizontal_bias="0.405"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.042" />
+        app:layout_constraintVertical_bias="0.016" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMagnet"
+        android:layout_width="409dp"
+        android:layout_height="628dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
