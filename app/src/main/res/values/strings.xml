@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">¡Contactos y Sensores!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="tiposensor">Magnetómetro</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="tiposensor2">Acelerómetro</string>
+</resources>
