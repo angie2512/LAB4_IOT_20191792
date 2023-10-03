@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="24dp"
-        android:text="@string/tiposensor2"
+        android:text="Acelerómetro"
         android:textColor="@color/white"
         android:textSize="40dp"
         android:textStyle="bold"
@@ -27,10 +27,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerAceler"
-        android:layout_width="365dp"
-        android:layout_height="618dp"
+        android:layout_width="375dp"
+        android:layout_height="610dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 

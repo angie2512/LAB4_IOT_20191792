@@ -13,7 +13,7 @@
         android:layout_height="72dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/azul"
-        android:text="Ir a Acelerómetro"
+        android:text="Ir al Magnetómetro"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
