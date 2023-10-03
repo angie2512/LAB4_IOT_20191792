@@ -1,9 +1,15 @@
 package com.example.lab4_20191792iot;
 
-import android.os.Bundle;
-
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.PopUpToBuilder;
+
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+
 
 import com.example.lab4_20191792iot.acelerometro.PersonasAcelerometroVM;
 import com.example.lab4_20191792iot.databinding.ActivityAppBinding;
@@ -22,12 +28,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppActivity extends AppCompatActivity {
-
     ActivityAppBinding binding;
 
     String textoMagnetometro = "Ir al Magnetómetro";
     String textoAcelerometro = "Ir al Acelerómetro";
-    ApiService apiService = new Retrofit.Builder()
+    ApiService servicioPersonas = new Retrofit.Builder()
             .baseUrl("https://randomuser.me")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -37,37 +42,51 @@ public class AppActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAppBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        AppActivityViewModel vistaviewmodel= new ViewModelProvider(AppActivity.this).get(AppActivityViewModel.class);
+        AppActivityViewModel appActivityViewModel = new ViewModelProvider(AppActivity.this).get(AppActivityViewModel.class);
         PersonasAcelerometroVM personasAcelerometroVM = new ViewModelProvider(AppActivity.this).get(PersonasAcelerometroVM.class);
         PersonasMagnetometroVM personasMagnetometroVM = new ViewModelProvider(AppActivity.this).get(PersonasMagnetometroVM.class);
 
         personasMagnetometroVM.getListaPersonasMagnetometro().postValue(new ArrayList<>());
         personasAcelerometroVM.getListaPersonasAcelerometro().postValue(new ArrayList<>());
-        vistaviewmodel.getVistaActual().postValue("Inicio");
+        appActivityViewModel.getVistaActual().postValue("Inicio");
 
         binding.ingresar.setOnClickListener(view -> {
             if(binding.ingresar.getText().toString().equals(textoAcelerometro)){
-                vistaviewmodel.getVistaActual().postValue("Acelerómetro");
+                appActivityViewModel.getVistaActual().postValue("Acelerómetro");
                 binding.ingresar.setText(textoMagnetometro);
             }else{
-                vistaviewmodel.getVistaActual().postValue("Magnetómetro");
+                appActivityViewModel.getVistaActual().postValue("Magnetómetro");
                 binding.ingresar.setText(textoAcelerometro);
             }
         });
+
+        binding.ojo.setOnClickListener(view -> {
+            Log.d("msg-test-nombre"," "+binding.ingresar.getText().toString());
+            if (binding.ingresar.getText().toString().equals(""+textoMagnetometro)){
+                // Estoy en el Acelerómetro
+                mostrarAlertaAcelerometro();
+            }else{
+                // Estoy en el Magnetómetro
+                mostrarAlertaMagnetometro();
+            }
+        });
+
         binding.anadir.setOnClickListener(view -> {
             binding.anadir.setEnabled(false);
-            binding.ingresar.setEnabled(false);
-            if (binding.ingresar.getText().toString().equals(textoMagnetometro)){
-                apiService.random().enqueue(new Callback<ResultAPI>() {
+            binding.anadir.setEnabled(false);
+            if (binding.anadir.getText().toString().equals(textoMagnetometro)){
+                // Estoy en el Acelerómetro
+                servicioPersonas.random().enqueue(new Callback<ResultAPI>() {
                     @Override
                     public void onResponse(Call<ResultAPI> call, Response<ResultAPI> response) {
                         if (response.isSuccessful()){
-                            ArrayList<Person> listaUsuariosAcelerometro = personasAcelerometroVM.getListaPersonasAcelerometro().getValue();
+                            ArrayList<Person> listaUsuariosAcelerómetro = personasAcelerometroVM.getListaPersonasAcelerometro().getValue();
                             Person persona = response.body().getResults().get(0);
-                            listaUsuariosAcelerometro.add(persona);
-                            personasAcelerometroVM.getListaPersonasAcelerometro().postValue(listaUsuariosAcelerometro);
-                            binding.anadir.setEnabled(true);
+                            listaUsuariosAcelerómetro.add(persona);
+                            personasAcelerometroVM.getListaPersonasAcelerometro().postValue(listaUsuariosAcelerómetro);
                             binding.ingresar.setEnabled(true);
+                            binding.anadir.setEnabled(true);
+                            ;
                         }
                     }
                     @Override
@@ -76,7 +95,8 @@ public class AppActivity extends AppCompatActivity {
                 });
 
             }else{
-                apiService.random().enqueue(new Callback<ResultAPI>() {
+                // Estoy en el magnetómetro
+                servicioPersonas.random().enqueue(new Callback<ResultAPI>() {
                     @Override
                     public void onResponse(Call<ResultAPI> call, Response<ResultAPI> response) {
                         if (response.isSuccessful()){
@@ -96,5 +116,37 @@ public class AppActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void mostrarAlertaMagnetometro(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Detalles - Magnetómetro");
+        alertDialog.setMessage("Haga CLICK en 'Añadir' para agregar contactos a su lista."+
+                " Esta aplicación está utilizando el MAGNETÓMETRO de su dispositivo.\n\n"+
+                "De esta forma, la lista se mostrará el 100% cuando se apunte al NORTE. "+
+                "Caso contrario, se desvanecerá...");
+        alertDialog.setPositiveButton("Aceptar",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.d("msgAlerta", "Positivo");
+                    }
+                });
+        alertDialog.show();
+    }
+    public void mostrarAlertaAcelerometro(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Detalles - Acelerómetro");
+        alertDialog.setMessage("Haga CLICK en 'Añadir' para agregar contactos a su lista."+
+                " Esta aplicación está utilizando el ACELERÓMETRO de su dispositivo.\n\n"+
+                "De esta forma, la lista hará scroll hacia abajo, cuando agite su dispositivo.");
+        alertDialog.setPositiveButton("Aceptar",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.d("msgAlerta", "Positivo");
+                    }
+                });
+        alertDialog.show();
     }
 }
